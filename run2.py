@@ -49,6 +49,20 @@ def solve(edges: list[tuple[str, str]]) -> list[str]:
         if target_gateway is None:
             break
 
+        # Проверяем находится ли вирус рядом со шлюзом
+        critical_gateway_cut = None
+        for gateway, node in available_cuts:
+            if gateway == target_gateway and node == virus_pos:
+                critical_gateway_cut = (gateway, node)
+                break
+
+        if critical_gateway_cut:
+            gateway, node = critical_gateway_cut
+            result.append(f"{gateway}-{node}")
+            graph[gateway].remove(node)
+            graph[node].remove(gateway)
+            continue
+
         # Находим следующий шаг для вируса
         next_node = find_next_move(graph, virus_pos, target_gateway)
 
